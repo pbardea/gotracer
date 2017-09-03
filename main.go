@@ -10,11 +10,7 @@ import (
     g "./geometry"
 )
 
-type Surface interface {
-    IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit)
-}
-
-func getColor(r rt.Ray, world Surface, depth int) v.Vector {
+func getColor(r rt.Ray, world rt.Surface, depth int) v.Vector {
     const MaxBounce = 20
     didHit, h := world.IntersectsRay(r, 0.001, math.MaxFloat64)
 
@@ -34,8 +30,10 @@ func main() {
     )
 
     c := rt.NewCamera()
-//     s := g.Sphere{v.Vector{0.0, 0.0, -5.0}, 0.5}
-    p := g.Plane{v.Vector{0.0, -1.0, 0.0}, v.Vector{0.0, 1.0, 1.0}}
+    s := g.Sphere{v.Vector{0.0, 0.0, -2.0}, 0.5}
+    p := g.Plane{v.Vector{0.0, -1.0, 0.0}, v.Vector{0.0, 1.0, 0.0}}
+
+    world := rt.World{[]rt.Surface{s, p}}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)
@@ -47,13 +45,13 @@ func main() {
                 yRand := rand.Float64() / float64(h)
                 xRand := rand.Float64() / float64(w)
                 r := c.RayAt(px + xRand, py + yRand)
-                rgb = rgb.Add(getColor(r, p, 0))
+                rgb = rgb.Add(getColor(r, world, 0))
             }
             rgb = rgb.Scale(1.0 / float64(aas))
             pixels[y][x] = rgb
         }
     }
     i := img.Img{img.Dim {w,h}, pixels}
-    i.Render("out/tiledplaneback.png")
+    i.Render("out/manyObjects.png")
 }
 

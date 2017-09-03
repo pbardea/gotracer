@@ -1,8 +1,6 @@
 package geometry
 
 import (
-    "math"
-
     rt "../raytracer"
     v "../vector"
 )
@@ -14,15 +12,10 @@ type Plane struct {
 func (p Plane) IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit) {
     denom := r.Direction.Dot(p.Normal)
     if denom > -0.001 && denom < 0.001 {
-        return true, rt.Hit {
-            r.Origin,
-            p.Normal,
-            r,
-            math.MaxFloat64,
-        }
+        return false, rt.Hit {}
     }
-    t := p.Origin.Sub(r.Origin).Dot(p.Normal) / r.Direction.Dot(p.Normal)
 
+    t := p.Origin.Sub(r.Origin).Dot(p.Normal) / r.Direction.Dot(p.Normal)
     if t > tMin && t < tMax {
         normalDir := 1.0
         if r.Direction.Dot(p.Normal) > 0 {

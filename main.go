@@ -1,9 +1,27 @@
 package main
 
 import (
+    "math"
+
     img "./img"
     v "./vector"
+    rt "./raytracer"
+    g "./geometry"
 )
+
+type Surface interface {
+    IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit)
+}
+
+func getColor(r rt.Ray, world Surface, depth int) v.Vector {
+    const MaxBounce = 20
+    didHit, _ := world.IntersectsRay(r, 0.001, math.MaxFloat64)
+
+    if didHit {
+        return v.Vector{1.0, 0.5, 0.0}
+    }
+    return v.Vector{1.0, 1.0, 1.0}
+}
 
 func main() {
     const (
@@ -11,15 +29,19 @@ func main() {
         h = 1000
     )
 
+    c := rt.NewCamera()
+    s := g.Sphere{v.Vector{0.0, 0.0, -1.0}, 0.5}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)
         py := float64(y) / float64(h)
         for x := 0; x < w; x++ {
             px := float64(x) / float64(w)
-            pixels[y][x] = v.Vector{px, py, 0.2}
+            r := c.RayAt(px, py)
+            pixels[y][x] = getColor(r, s, 0)
         }
     }
     i := img.Img{img.Dim {w,h}, pixels}
-    i.Render("out/gradient.png")
+    i.Render("out/ball.png")
 }
+

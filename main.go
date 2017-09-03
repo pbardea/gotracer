@@ -35,7 +35,7 @@ func main() {
 
     c := rt.NewCamera()
 //     s := g.Sphere{v.Vector{0.0, 0.0, -5.0}, 0.5}
-    p := g.Plane{v.Vector{0.0, -1.0, 0.0}, v.Vector{0.0, 1.0, 0.0}}
+    p := g.Plane{v.Vector{0.0, -1.0, 0.0}, v.Vector{0.0, 1.0, 1.0}}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)
@@ -54,6 +54,6 @@ func main() {
         }
     }
     i := img.Img{img.Dim {w,h}, pixels}
-    i.Render("out/ballaa.png")
+    i.Render("out/tiledplaneback.png")
 }
 

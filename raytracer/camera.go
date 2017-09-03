@@ -10,8 +10,8 @@ type Camera struct {
 
 func NewCamera() Camera {
     c := Camera{
-        lowerLeft: v.Vector{-2.0, -1.0, -1.0},
-        h: v.Vector{4.0, 0.0, 0.0},
+        lowerLeft: v.Vector{-1.0, -1.0, -1.0},
+        h: v.Vector{2.0, 0.0, 0.0},
         v: v.Vector{0.0, 2.0, 0.0},
         origin: v.Vector{0.0, 0.0, 0.0},
     }

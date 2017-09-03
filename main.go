@@ -2,6 +2,7 @@ package main
 
 import (
     "math"
+    "math/rand"
 
     img "./img"
     v "./vector"
@@ -27,6 +28,9 @@ func main() {
     const (
         w = 1000
         h = 1000
+
+        // Anti-aliasing sampling rate
+        aas = 50
     )
 
     c := rt.NewCamera()
@@ -37,11 +41,18 @@ func main() {
         py := float64(y) / float64(h)
         for x := 0; x < w; x++ {
             px := float64(x) / float64(w)
-            r := c.RayAt(px, py)
-            pixels[y][x] = getColor(r, s, 0)
+            rgb := v.Vector{}
+            for sample := 0; sample < aas; sample++ {
+                yRand := rand.Float64() / float64(h)
+                xRand := rand.Float64() / float64(w)
+                r := c.RayAt(px + xRand, py + yRand)
+                rgb = rgb.Add(getColor(r, s, 0))
+            }
+            rgb = rgb.Scale(1.0 / float64(aas))
+            pixels[y][x] = rgb
         }
     }
     i := img.Img{img.Dim {w,h}, pixels}
-    i.Render("out/ball.png")
+    i.Render("out/ballaa.png")
 }
 

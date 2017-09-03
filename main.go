@@ -34,7 +34,8 @@ func main() {
     )
 
     c := rt.NewCamera()
-    s := g.Sphere{v.Vector{0.0, 0.0, -5.0}, 0.5}
+//     s := g.Sphere{v.Vector{0.0, 0.0, -5.0}, 0.5}
+    p := g.Plane{v.Vector{0.0, -1.0, 0.0}, v.Vector{0.0, 1.0, 0.0}}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)
@@ -46,7 +47,7 @@ func main() {
                 yRand := rand.Float64() / float64(h)
                 xRand := rand.Float64() / float64(w)
                 r := c.RayAt(px + xRand, py + yRand)
-                rgb = rgb.Add(getColor(r, s, 0))
+                rgb = rgb.Add(getColor(r, p, 0))
             }
             rgb = rgb.Scale(1.0 / float64(aas))
             pixels[y][x] = rgb

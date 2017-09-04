@@ -41,10 +41,26 @@ func (v Vector) Normalize() Vector {
 func (v Vector) Translate(s float64) Vector {
     return Vector{v.X + s, v.Y + s, v.Z + s}
 }
-// primitives/vector.go
+
+func (v Vector) ReflectAbout(n Vector) Vector {
+    return v.Sub(n.Scale(2.0 * v.Dot(n)))
+}
+
+func RandomVector() Vector {
+    x := rand.Float64()
+    y := rand.Float64()
+    z := rand.Float64()
+    xSign := rand.Int() % 2 == 0
+    ySign := rand.Int() % 2 == 0
+    zSign := rand.Int() % 2 == 0
+    if !xSign { x *= -1  }
+    if !ySign { y *= -1  }
+    if !zSign { z *= -1  }
+    return Vector{x, y, z}
+}
+
 var UnitVector = Vector{1, 1, 1}
 
-// rejection method for finding random point on unit sphere
 func VectorInUnitSphere() Vector {
     for {
         r := Vector{rand.Float64(), rand.Float64(), rand.Float64()}

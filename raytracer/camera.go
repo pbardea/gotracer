@@ -23,6 +23,6 @@ func (c Camera) RayAt(x float64, y float64) Ray {
     position := c.h.Scale(x).Add(c.v.Scale(1-y))
     direction := c.lowerLeft.Add(position)
 
-    return Ray{c.origin, direction}
+    return Ray{c.origin, direction, v.Vector{1.0, 1.0, 1.0}}
 }
 

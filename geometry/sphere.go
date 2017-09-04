@@ -10,6 +10,7 @@ import (
 type Sphere struct {
     Center v.Vector
     Radius float64
+    Material rt.Material
 }
 
 func (s Sphere) IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit) {
@@ -20,7 +21,7 @@ func (s Sphere) IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hi
     c := toCenter.Dot(toCenter) - s.Radius*s.Radius
     discr := b*b - 4*a*c
 
-    h := rt.Hit{}
+    h := rt.Hit{Material: s.Material}
 
     if discr > 0 {
         t := (-b - math.Sqrt(discr)) / (2*a)

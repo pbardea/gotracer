@@ -7,6 +7,7 @@ import (
 
 type Plane struct {
     Origin, Normal v.Vector
+    Material rt.Material
 }
 
 func (p Plane) IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit) {
@@ -26,6 +27,7 @@ func (p Plane) IntersectsRay(r rt.Ray, tMin float64, tMax float64) (bool, rt.Hit
             p.Normal.Scale(normalDir),
             r,
             t,
+            p.Material,
         }
     }
     return false, rt.Hit{}

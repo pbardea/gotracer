@@ -26,13 +26,24 @@ func getColor(r rt.Ray, world rt.Surface, depth int) v.Vector {
         }
         return v.Vector{0.0, 0.0, 0.0}
     }
-	return v.Vector{1, 1, 1}
+    unitDirection := r.Direction.Normalize()
+
+    // scale t to be between 0.0 and 1.0
+    t := 0.5 * (unitDirection.X + 1.0)
+
+    // linear blend
+    // blended_value = (1 - t) * white + t * blue
+    white := v.Vector{1.0, 1.0, 1.0}
+    blue := v.Vector{0.5, 0.7, 1.0}
+
+    return v.Vector{}
+    return white.Scale(1.0 - t).Add(blue.Scale(t))
 }
 
 func main() {
     const (
-        w = 200
-        h = 200
+        w = 500
+        h = 500
 
         // Anti-aliasing sampling rate
         aas = 50
@@ -40,10 +51,12 @@ func main() {
 
     c := rt.NewCamera()
 
-    s := g.Sphere{v.Vector{0, 0, -1}, 0.5, m.Diffuse{v.Vector{1, 0.2, 0.3}}}
-    p := g.Plane{v.Vector{0, -1, 0}, v.Vector{0, 1, 0}, m.Diffuse{v.Vector{1, 0.8, 0.8}}}
+    s := g.Sphere{v.Vector{0.5, 0, -1}, 0.5, m.Diffuse{v.Vector{0.8, 0.3, 0.3}}}
+    s3 := g.Sphere{v.Vector{0, 1.5, -0.5}, 1, m.Emitter{v.Vector{0.2, 1, 0.2}}}
+    s2 := g.Sphere{v.Vector{-3, 0, -4}, 0.5, m.Diffuse{v.Vector{0.8, 0.3, 0.3}}}
+    p := g.Plane{v.Vector{0, -0.5, 0}, v.Vector{0, 1, 0}, m.Diffuse{v.Vector{0.2, 0.1, 0.8}}}
 
-    world := rt.World{[]rt.Surface{s, p}}
+    world := rt.World{[]rt.Surface{s, s2, s3, p}}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)

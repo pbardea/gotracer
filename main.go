@@ -17,34 +17,33 @@ func getColor(r rt.Ray, world rt.Surface, depth int) v.Vector {
 
     if didHit {
         if depth < maxBounce {
-            bouncedRay, finished := h.Material.Scatter(h)
-            if finished {
-                return bouncedRay.Color
+            bouncedRay, bounced := h.Material.Scatter(h)
+            if bounced {
+                return h.Material.Color().Mult(getColor(bouncedRay, world, depth + 1))
             } else {
-                return bouncedRay.Color.Mult(getColor(bouncedRay, world, depth + 1))
+                return h.Material.Color()
             }
         }
         return v.Vector{0.0, 0.0, 0.0}
     }
-    return v.Vector{1.0, 1.0, 1.0}
+	return v.Vector{1, 1, 1}
 }
 
 func main() {
     const (
-        w = 1000
-        h = 1000
+        w = 200
+        h = 200
 
         // Anti-aliasing sampling rate
         aas = 50
     )
 
     c := rt.NewCamera()
-    s := g.Sphere{v.Vector{0.5, 0, -2}, 0.5, m.Diffuse{v.Vector{0.8, 0.3, 0.3}}}
-    s2 := g.Sphere{v.Vector{-3, 0, -10}, 0.5, m.Diffuse{v.Vector{0.8, 0.3, 0.3}}}
-    s3 := g.Sphere{v.Vector{-2, 0.5, -3.5}, 1, m.Reflective{v.Vector{1, 1, 1}, 0}}
-    p := g.Plane{v.Vector{0, -0.5, 0}, v.Vector{0, 1, 0}, m.Diffuse{v.Vector{0.2, 0.1, 0.8}}}
 
-    world := rt.World{[]rt.Surface{s, s2, s3, p}}
+    s := g.Sphere{v.Vector{0, 0, -1}, 0.5, m.Diffuse{v.Vector{1, 0.2, 0.3}}}
+    p := g.Plane{v.Vector{0, -1, 0}, v.Vector{0, 1, 0}, m.Diffuse{v.Vector{1, 0.8, 0.8}}}
+
+    world := rt.World{[]rt.Surface{s, p}}
     pixels := make([][]v.Vector, h)
     for y := 0; y < h; y++ {
         pixels[y] = make([]v.Vector, w)
@@ -63,6 +62,6 @@ func main() {
         }
     }
     i := img.Img{img.Dim {w,h}, pixels}
-    i.Render("out/reflective.png")
+    i.Render("out/basic.png")
 }
 

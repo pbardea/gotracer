@@ -5,11 +5,12 @@ import (
 )
 
 type Material interface {
+    Color() v.Vector
     Scatter(h Hit) (Ray, bool)
 }
 
 type Ray struct {
-    Origin, Direction, Color v.Vector
+    Origin, Direction v.Vector
 }
 
 func (r Ray) Point(t float64) v.Vector {
